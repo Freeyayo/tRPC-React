@@ -7,24 +7,25 @@ import "./index.css";
 
 const client = new QueryClient();
 
-const AppContent = () => (
-  <div className="container">
-    <div>Name: client</div>
-    <div>Framework: react</div>
-    <div>Language: TypeScript</div>
-    <div>CSS: Empty CSS</div>
-  </div>
-);
+const AppContent = () => {
+  const getMessages = trpc.useQuery(["getMessages"]);
+  return (
+    <div className="container">
+      <div>DATA:</div>
+      <div>{JSON.stringify(getMessages.data)}</div>
+    </div>
+  );
+};
 
 const App = () => {
   const [trpcClient] = useState(() => {
-    trpc.createClient({
+    return trpc.createClient({
       url: "http://localhost:8080/trpc",
     });
   });
 
   return (
-    <trpc.Provider client={trpcClient as any} queryClient={client}>
+    <trpc.Provider client={trpcClient} queryClient={client}>
       <QueryClientProvider client={client}>
         <AppContent />
       </QueryClientProvider>
